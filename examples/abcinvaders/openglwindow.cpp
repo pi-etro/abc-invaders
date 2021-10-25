@@ -64,7 +64,7 @@ void OpenGLWindow::restart() {
   m_gameData.m_state = State::Playing;
 
   m_cannon.initializeGL(m_objectsProgram);
-  m_aliens.initializeGL(m_objectsProgram, 3);
+  m_aliens.initializeGL(m_objectsProgram);
 }
 
 void OpenGLWindow::update() {

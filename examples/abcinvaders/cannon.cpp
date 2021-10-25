@@ -15,7 +15,7 @@ void Cannon::initializeGL(GLuint program) {
   m_color = glm::vec4{0.00f, 1.00f, 0.00f, 1.0f};
   m_rotation = 0.0f;
   m_translation = glm::vec2(0, -0.90);
-  m_velocity = glm::vec2(0);
+  m_velocity = glm::vec2(1.5f, 0.0f);
 
   // clang-format off
   std::array<glm::vec2, 24> positions{
@@ -107,7 +107,7 @@ void Cannon::terminateGL() {
 void Cannon::update(const GameData &gameData, float deltaTime) {
   // Move
   if (gameData.m_input[static_cast<size_t>(Input::Left)] && m_translation.x > -0.85)
-    m_translation.x -= 1.5 * deltaTime;
+    m_translation -= m_velocity * deltaTime;
   if (gameData.m_input[static_cast<size_t>(Input::Right)] && m_translation.x < 0.85)
-    m_translation.x += 1.5 * deltaTime;
+    m_translation += m_velocity * deltaTime;
 }

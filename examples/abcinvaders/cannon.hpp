@@ -13,7 +13,6 @@ class Cannon {
   void terminateGL();
 
   void update(const GameData &gameData, float deltaTime);
-  void setRotation(float rotation) { m_rotation = rotation; }
 
  private:
   friend OpenGLWindow;
@@ -28,11 +27,11 @@ class Cannon {
   GLuint m_vbo{};
   GLuint m_ebo{};
 
-  glm::vec4 m_color{1};
+  glm::vec4 m_color{0.00f, 1.00f, 0.00f, 1.0f};
   float m_rotation{};
   float m_scale{0.125f};
-  glm::vec2 m_translation{glm::vec2(0)};
-  glm::vec2 m_velocity{glm::vec2(0)};
+  glm::vec2 m_translation{glm::vec2(0.0f, -0.90f)};
+  glm::vec2 m_velocity{glm::vec2(1.5f, 0.0f)};
 
   abcg::ElapsedTimer m_bulletCoolDownTimer;
 };
