@@ -6,8 +6,10 @@
 #include <random>
 
 #include "abcg.hpp"
-#include "cannon.hpp"
-#include "aliens.hpp"
+#include "asteroids.hpp"
+#include "bullets.hpp"
+#include "ship.hpp"
+#include "starlayers.hpp"
 
 class OpenGLWindow : public abcg::OpenGLWindow {
  protected:
@@ -19,6 +21,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   void terminateGL() override;
 
  private:
+  GLuint m_starsProgram{};
   GLuint m_objectsProgram{};
 
   int m_viewportWidth{};
@@ -26,8 +29,10 @@ class OpenGLWindow : public abcg::OpenGLWindow {
 
   GameData m_gameData;
 
-  Cannon m_cannon;
-  Aliens m_aliens;
+  Asteroids m_asteroids;
+  Bullets m_bullets;
+  Ship m_ship;
+  StarLayers m_starLayers;
 
   abcg::ElapsedTimer m_restartWaitTimer;
 
@@ -35,8 +40,8 @@ class OpenGLWindow : public abcg::OpenGLWindow {
 
   std::default_random_engine m_randomEngine;
 
-//   void checkCollisions();
-//   void checkWinCondition();
+  void checkCollisions();
+  void checkWinCondition();
 
   void restart();
   void update();
