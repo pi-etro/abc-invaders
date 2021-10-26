@@ -17,10 +17,12 @@ void Aliens::initializeGL(GLuint program) {
 
   // Create aliens
   m_aliens.clear();
-  m_aliens.resize(5);
+  m_aliens.resize(3);
 
+  float i = -0.5;
   for (auto &alien : m_aliens) {
-    alien = createAlien();
+    alien = createAlien(i);
+    i += 0.5;
   }
 }
 
@@ -41,6 +43,22 @@ void Aliens::paintGL() {
     abcg::glBindVertexArray(0);
   }
 
+  // move troops for 10 ms 
+  if (m_marchPace.elapsed() > 505.0 / 1000.0) m_marchPace.restart();
+
+  auto min = std::min_element(m_aliens.begin(), m_aliens.end(), compareX);
+  
+
+  if ( min->m_translation.x < -0.85 ){
+    m_direction = 1.0;
+  }
+  else {
+    auto max = std::max_element(m_aliens.begin(), m_aliens.end(), compareX);
+    if ( max->m_translation.x> 0.85 ){
+        m_direction = -1.0;
+    }
+  }
+
   abcg::glUseProgram(0);
 }
 
@@ -53,23 +71,22 @@ void Aliens::terminateGL() {
 }
 
 void Aliens::update(float deltaTime) {
-  if (m_marchPace.elapsed() > 1) {
-      m_marchPace.restart();
+  // move troops every 500 ms
+  if (m_marchPace.elapsed() > 500.0 / 1000.0) {
     for (auto &alien : m_aliens) {
-        alien.m_translation += alien.m_velocity * deltaTime;
+        alien.m_translation += alien.m_velocity * deltaTime * m_direction;
     }
   }
 }
 
-Aliens::Alien Aliens::createAlien(glm::vec2 translation,
-                                              float scale) {
+Aliens::Alien Aliens::createAlien(float i, float scale) {
   Alien alien;
 
   alien.m_color = glm::vec4{1};
   alien.m_rotation = 0.0f;
   alien.m_scale = scale;
-  alien.m_translation = translation;
-  alien.m_velocity = glm::vec2(1.5f, 0.0f);
+  alien.m_translation = glm::vec2(i, 0);
+  alien.m_velocity = glm::vec2(3.0f, 0.0f);
 
   // clang-format off
   std::array<glm::vec2, 24> positions{
@@ -124,4 +141,8 @@ Aliens::Alien Aliens::createAlien(glm::vec2 translation,
   abcg::glBindVertexArray(0);
 
   return alien;
+}
+
+bool Aliens::compareX(const Aliens::Alien &left, const Aliens::Alien &right){
+    return left.m_translation.x < right.m_translation.x;
 }

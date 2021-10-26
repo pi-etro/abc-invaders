@@ -46,8 +46,11 @@ class Aliens {
   std::default_random_engine m_randomEngine;
   std::uniform_real_distribution<float> m_randomDist{-1.0f, 1.0f};
 
-  Aliens::Alien createAlien(glm::vec2 translation = glm::vec2(0),
-                                     float scale = 0.25f);
+  Aliens::Alien createAlien(float i, float scale = 0.125f);
+
+  float m_direction = 1.0;
+
+  static bool compareX(const Aliens::Alien &left, const Aliens::Alien &right);
 
 };
 
