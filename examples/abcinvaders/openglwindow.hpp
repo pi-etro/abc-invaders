@@ -7,6 +7,7 @@
 
 #include "abcg.hpp"
 #include "cannon.hpp"
+#include "bullets.hpp"
 #include "aliens.hpp"
 
 class OpenGLWindow : public abcg::OpenGLWindow {
@@ -27,6 +28,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   GameData m_gameData;
 
   Cannon m_cannon;
+  Bullets m_bullets;
   Aliens m_aliens;
 
   abcg::ElapsedTimer m_restartWaitTimer;
@@ -35,8 +37,8 @@ class OpenGLWindow : public abcg::OpenGLWindow {
 
   std::default_random_engine m_randomEngine;
 
-//   void checkCollisions();
-//   void checkWinCondition();
+  void checkCollisions();
+  void checkWinCondition();
 
   void restart();
   void update();

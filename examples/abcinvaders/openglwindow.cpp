@@ -64,6 +64,7 @@ void OpenGLWindow::restart() {
   m_gameData.m_state = State::Playing;
 
   m_cannon.initializeGL(m_objectsProgram);
+  m_bullets.initializeGL(m_objectsProgram);
   m_aliens.initializeGL(m_objectsProgram);
 }
 
@@ -78,12 +79,13 @@ void OpenGLWindow::update() {
   }
 
   m_cannon.update(m_gameData, deltaTime);
+  m_bullets.update(m_cannon, m_gameData, deltaTime);
   m_aliens.update(deltaTime);
 
-//   if (m_gameData.m_state == State::Playing) {
-//     checkCollisions();
-//     checkWinCondition();
-//   }
+  if (m_gameData.m_state == State::Playing) {
+    checkCollisions();
+    checkWinCondition();
+  }
 }
 
 void OpenGLWindow::paintGL() {
@@ -93,6 +95,7 @@ void OpenGLWindow::paintGL() {
   abcg::glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 
   m_cannon.paintGL(m_gameData);
+  m_bullets.paintGL();
   m_aliens.paintGL();
 }
 
@@ -133,64 +136,52 @@ void OpenGLWindow::terminateGL() {
   abcg::glDeleteProgram(m_objectsProgram);
 
   m_cannon.terminateGL();
+  m_bullets.terminateGL();
   m_aliens.terminateGL();
 }
 
-// void OpenGLWindow::checkCollisions() {
-//   // Check collision between ship and asteroids
-//   for (const auto &asteroid : m_asteroids.m_asteroids) {
-//     const auto asteroidTranslation{asteroid.m_translation};
-//     const auto distance{
-//         glm::distance(m_ship.m_translation, asteroidTranslation)};
+void OpenGLWindow::checkCollisions() {
+  // Check collision between ship and aliens
+  for (const auto &alien : m_aliens.m_aliens) {
+    const auto alienTranslation{alien.m_translation};
+    const auto distance{
+        glm::distance(m_cannon.m_translation, alienTranslation)};
 
-//     if (distance < m_ship.m_scale * 0.9f + asteroid.m_scale * 0.85f) {
-//       m_gameData.m_state = State::GameOver;
-//       m_restartWaitTimer.restart();
-//     }
-//   }
+    if (distance < m_cannon.m_scale * 0.9f + alien.m_scale * 0.85f) { // TODO ajustar hitboxes
+      m_gameData.m_state = State::GameOver;
+      m_restartWaitTimer.restart();
+    }
+  }
 
-//   // Check collision between bullets and asteroids
-//   for (auto &bullet : m_bullets.m_bullets) {
-//     if (bullet.m_dead) continue;
+  // Check collision between bullets and aliens
+  for (auto &bullet : m_bullets.m_bullets) {
+    if (bullet.m_dead) continue;
 
-//     for (auto &asteroid : m_asteroids.m_asteroids) {
-//       for (const auto i : {-2, 0, 2}) {
-//         for (const auto j : {-2, 0, 2}) {
-//           const auto asteroidTranslation{asteroid.m_translation +
-//                                          glm::vec2(i, j)};
-//           const auto distance{
-//               glm::distance(bullet.m_translation, asteroidTranslation)};
+    for (auto &alien : m_aliens.m_aliens) {
+      for (const auto i : {-2, 0, 2}) {
+        for (const auto j : {-2, 0, 2}) {
+          const auto alienTranslation{alien.m_translation +
+                                         glm::vec2(i, j)};
+          const auto distance{
+              glm::distance(bullet.m_translation, alienTranslation)};
 
-//           if (distance < m_bullets.m_scale + asteroid.m_scale * 0.85f) {
-//             asteroid.m_hit = true;
-//             bullet.m_dead = true;
-//           }
-//         }
-//       }
-//     }
+          if (distance < m_bullets.m_scale + alien.m_scale * 0.85f) { // TODO ajustar hitboxes
+            alien.m_hit = true;
+            bullet.m_dead = true;
+          }
+        }
+      }
+    }
 
-//     // Break asteroids marked as hit
-//     for (const auto &asteroid : m_asteroids.m_asteroids) {
-//       if (asteroid.m_hit && asteroid.m_scale > 0.10f) {
-//         std::uniform_real_distribution<float> m_randomDist{-1.0f, 1.0f};
-//         std::generate_n(std::back_inserter(m_asteroids.m_asteroids), 3, [&]() {
-//           const glm::vec2 offset{m_randomDist(m_randomEngine),
-//                                  m_randomDist(m_randomEngine)};
-//           return m_asteroids.createAsteroid(
-//               asteroid.m_translation + offset * asteroid.m_scale * 0.5f,
-//               asteroid.m_scale * 0.5f);
-//         });
-//       }
-//     }
+    // Kill aliens marked as hit
+    m_aliens.m_aliens.remove_if(
+        [](const Aliens::Alien &a) { return a.m_hit; });
+  }
+}
 
-//     m_asteroids.m_asteroids.remove_if(
-//         [](const Asteroids::Asteroid &a) { return a.m_hit; });
-//   }
-// }
-
-// void OpenGLWindow::checkWinCondition() {
-//   if (m_asteroids.m_asteroids.empty()) {
-//     m_gameData.m_state = State::Win;
-//     m_restartWaitTimer.restart();
-//   }
-// }
+void OpenGLWindow::checkWinCondition() {
+  if (m_aliens.m_aliens.empty()) {
+    m_gameData.m_state = State::Win;
+    m_restartWaitTimer.restart();
+  }
+}

@@ -5,6 +5,7 @@
 #include "gamedata.hpp"
 
 class OpenGLWindow;
+class Bullets;
 
 class Cannon {
  public:
@@ -16,6 +17,7 @@ class Cannon {
 
  private:
   friend OpenGLWindow;
+  friend Bullets;
 
   GLuint m_program{};
   GLint m_translationLoc{};
