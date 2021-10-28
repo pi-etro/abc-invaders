@@ -33,7 +33,7 @@ class Cannon {
   float m_rotation{};
   float m_scale{1};
   glm::vec2 m_translation{glm::vec2(0.0f, -0.90f)};
-  glm::vec2 m_velocity{glm::vec2(1.5f, 0.0f)};
+  glm::vec2 m_velocity{glm::vec2(0.5f, 0.0f)};
 
   abcg::ElapsedTimer m_bulletCoolDownTimer;
 };

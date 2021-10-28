@@ -15,7 +15,7 @@ void Cannon::initializeGL(GLuint program) {
   m_color = glm::vec4{0.00f, 1.00f, 0.00f, 1.0f};
   m_rotation = 0.0f;
   m_translation = glm::vec2(0, -0.90);
-  m_velocity = glm::vec2(1.5f, 0.0f);
+  m_velocity = glm::vec2(0.5f, 0.0f);
 
   // clang-format off
   std::array<glm::vec2, 24> positions{
@@ -38,30 +38,8 @@ void Cannon::initializeGL(GLuint program) {
       glm::vec2{-0.00375f, +0.08f},
       glm::vec2{+0.00375f, +0.00f},
       glm::vec2{+0.00375f, +0.08f},
-
-//       // Cannon body
-//       glm::vec2{-10.5f, -04.0f},
-//       glm::vec2{-10.5f, +04.0f},
-//       glm::vec2{+10.5f, -04.0f},
-//       glm::vec2{+10.5f, +04.0f},
-
-//       // Cannon barrel
-//       glm::vec2{-02.5f, +02.5f},
-//       glm::vec2{-02.5f, +09.5f},
-//       glm::vec2{+02.5f, +02.5f},
-//       glm::vec2{+02.5f, +09.5f},
       };
 
-//   // Normalize
-//   for (auto &position : positions) {
-//     position /= glm::vec2{15.5f, 15.5f};
-//   }
-
-//   const std::array indices{0, 1, 2,
-//                            1, 2, 3,
-//                            // barrel
-//                            4, 5, 6,
-//                            5, 6, 7};
   const std::array indices{0, 1, 2,
                            1, 2, 3,
 

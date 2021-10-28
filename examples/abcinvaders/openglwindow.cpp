@@ -103,7 +103,7 @@ void OpenGLWindow::paintUI() {
   abcg::OpenGLWindow::paintUI();
 
   {
-    const auto size{ImVec2(300, 85)};
+    const auto size{ImVec2(350, 85)};
     const auto position{ImVec2((m_viewportWidth - size.x) / 2.0f,
                                (m_viewportHeight - size.y) / 2.0f)};
     ImGui::SetNextWindowPos(position);
@@ -117,7 +117,7 @@ void OpenGLWindow::paintUI() {
     if (m_gameData.m_state == State::GameOver) {
       ImGui::Text("GAME OVER");
     } else if (m_gameData.m_state == State::Win) {
-      ImGui::Text("You Win!");
+      ImGui::Text(" You Win!");
     }
 
     ImGui::PopFont();
@@ -141,16 +141,16 @@ void OpenGLWindow::terminateGL() {
 }
 
 void OpenGLWindow::checkCollisions() {
-  // Check collision between ship and aliens
+  // Check collision between cannon and aliens
   for (const auto &alien : m_aliens.m_aliens) {
     const auto alienTranslation{alien.m_translation};
     const auto distance{
         glm::distance(m_cannon.m_translation, alienTranslation)};
 
-    // if (distance < m_cannon.m_scale * 0.9f + alien.m_scale * 0.85f) { // TODO ajustar hitboxes
-    //   m_gameData.m_state = State::GameOver;
-    //   m_restartWaitTimer.restart();
-    // }
+    if (distance < 0.1125f/2 + 0.0825f/2 || alien.m_translation.y < -1.0f) { // TODO ajustar hitboxes
+      m_gameData.m_state = State::GameOver;
+      m_restartWaitTimer.restart();
+    }
   }
 
   // Check collision between bullets and aliens
@@ -165,10 +165,10 @@ void OpenGLWindow::checkCollisions() {
           const auto distance{
               glm::distance(bullet.m_translation, alienTranslation)};
 
-        //   if (distance < m_bullets.m_scale + alien.m_scale * 0.85f) { // TODO ajustar hitboxes
-        //     alien.m_hit = true;
-        //     bullet.m_dead = true;
-        //   }
+          if (distance < 0.00375f/2 + 0.0825f/2) { // TODO ajustar hitboxes
+            alien.m_hit = true;
+            bullet.m_dead = true;
+          }
         }
       }
     }

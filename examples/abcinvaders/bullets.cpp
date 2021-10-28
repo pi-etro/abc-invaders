@@ -93,10 +93,10 @@ void Bullets::update(Cannon &cannon, const GameData &gameData, float deltaTime) 
   if (gameData.m_input[static_cast<size_t>(Input::Fire)] &&
       gameData.m_state == State::Playing) {
     // At least 250 ms must have passed since the last bullets
-    if (cannon.m_bulletCoolDownTimer.elapsed() > 250.0 / 1000.0) {
+    if (cannon.m_bulletCoolDownTimer.elapsed() > 500.0 / 1000.0) {
       cannon.m_bulletCoolDownTimer.restart();
 
-      const auto bulletSpeed = glm::vec2{0.0f, 2.0f};
+      const auto bulletSpeed = glm::vec2{0.0f, 2.5f};
 
       Bullet bullet{.m_dead = false,
                     .m_translation = cannon.m_translation,
