@@ -36,7 +36,7 @@ class Bullets {
     glm::vec2 m_velocity{glm::vec2(0)};
   };
 
-  float m_scale{0.015f};
+  float m_scale{1};
 
   std::list<Bullet> m_bullets;
 };

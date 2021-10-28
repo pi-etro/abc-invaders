@@ -147,10 +147,10 @@ void OpenGLWindow::checkCollisions() {
     const auto distance{
         glm::distance(m_cannon.m_translation, alienTranslation)};
 
-    if (distance < m_cannon.m_scale * 0.9f + alien.m_scale * 0.85f) { // TODO ajustar hitboxes
-      m_gameData.m_state = State::GameOver;
-      m_restartWaitTimer.restart();
-    }
+    // if (distance < m_cannon.m_scale * 0.9f + alien.m_scale * 0.85f) { // TODO ajustar hitboxes
+    //   m_gameData.m_state = State::GameOver;
+    //   m_restartWaitTimer.restart();
+    // }
   }
 
   // Check collision between bullets and aliens
@@ -165,10 +165,10 @@ void OpenGLWindow::checkCollisions() {
           const auto distance{
               glm::distance(bullet.m_translation, alienTranslation)};
 
-          if (distance < m_bullets.m_scale + alien.m_scale * 0.85f) { // TODO ajustar hitboxes
-            alien.m_hit = true;
-            bullet.m_dead = true;
-          }
+        //   if (distance < m_bullets.m_scale + alien.m_scale * 0.85f) { // TODO ajustar hitboxes
+        //     alien.m_hit = true;
+        //     bullet.m_dead = true;
+        //   }
         }
       }
     }

@@ -17,12 +17,20 @@ void Aliens::initializeGL(GLuint program) {
 
   // Create aliens
   m_aliens.clear();
-  m_aliens.resize(3);
+  m_aliens.resize(55);
 
-  float i = -0.5;
+  float x = -0.6375;
+  float y = 0.765;
+  int i = 0;
   for (auto &alien : m_aliens) {
-    alien = createAlien(i);
-    i += 0.5;
+    alien = createAlien(x, y);
+    x += 0.09 + 0.0375;
+    i++;
+    if (i == 11){
+        i = 0;
+        x = -0.6375;
+        y -= 0.08 + 0.075;
+    }
   }
 }
 
@@ -79,28 +87,23 @@ void Aliens::update(float deltaTime) {
   }
 }
 
-Aliens::Alien Aliens::createAlien(float i, float scale) {
+Aliens::Alien Aliens::createAlien(float x, float y, float scale) {
   Alien alien;
 
   alien.m_color = glm::vec4{1};
   alien.m_rotation = 0.0f;
   alien.m_scale = scale;
-  alien.m_translation = glm::vec2(i, 0);
+  alien.m_translation = glm::vec2(x, y);
   alien.m_velocity = glm::vec2(3.0f, 0.0f);
 
   // clang-format off
   std::array<glm::vec2, 24> positions{
-      // alien
-      glm::vec2{-10.5f, -04.0f},
-      glm::vec2{-10.5f, +04.0f},
-      glm::vec2{+10.5f, -04.0f},
-      glm::vec2{+10.5f, +04.0f},
+      // alien generic
+      glm::vec2{-0.045f, -0.00f},
+      glm::vec2{-0.045f, +0.08f},
+      glm::vec2{+0.045f, -0.00f},
+      glm::vec2{+0.045f, +0.08f},
       };
-
-  // Normalize
-  for (auto &position : positions) {
-    position /= glm::vec2{15.5f, 15.5f};
-  }
 
   const std::array indices{0, 1, 2,
                            1, 2, 3};

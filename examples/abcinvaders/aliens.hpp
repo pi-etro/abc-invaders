@@ -34,7 +34,7 @@ class Aliens {
     bool m_hit{false};
     glm::vec4 m_color{1};
     float m_rotation{};
-    float m_scale{};
+    float m_scale{1};
     glm::vec2 m_translation{glm::vec2(0)};
     glm::vec2 m_velocity{glm::vec2(0)};
   };
@@ -46,7 +46,7 @@ class Aliens {
   std::default_random_engine m_randomEngine;
   std::uniform_real_distribution<float> m_randomDist{-1.0f, 1.0f};
 
-  Aliens::Alien createAlien(float i, float scale = 0.125f);
+  Aliens::Alien createAlien(float x, float y, float scale = 1.0f);
 
   float m_direction = 1.0;
 

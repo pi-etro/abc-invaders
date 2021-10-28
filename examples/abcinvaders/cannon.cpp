@@ -19,29 +19,60 @@ void Cannon::initializeGL(GLuint program) {
 
   // clang-format off
   std::array<glm::vec2, 24> positions{
-      // Cannon body
-      glm::vec2{-10.5f, -04.0f},
-      glm::vec2{-10.5f, +04.0f},
-      glm::vec2{+10.5f, -04.0f},
-      glm::vec2{+10.5f, +04.0f},
+      glm::vec2{-0.05625f, +0.00f},
+      glm::vec2{-0.05625f, +0.04f},
+      glm::vec2{+0.05625f, +0.00f},
+      glm::vec2{+0.05625f, +0.04f},
 
-      // Cannon barrel
-      glm::vec2{-02.5f, +02.5f},
-      glm::vec2{-02.5f, +09.5f},
-      glm::vec2{+02.5f, +02.5f},
-      glm::vec2{+02.5f, +09.5f},
+      glm::vec2{-0.04875f, +0.00f},
+      glm::vec2{-0.04875f, +0.05f},
+      glm::vec2{+0.04875f, +0.00f},
+      glm::vec2{+0.04875f, +0.05f},
+
+      glm::vec2{-0.01125f, +0.00f},
+      glm::vec2{-0.01125f, +0.07f},
+      glm::vec2{+0.01125f, +0.00f},
+      glm::vec2{+0.01125f, +0.07f},
+
+      glm::vec2{-0.00375f, +0.00f},
+      glm::vec2{-0.00375f, +0.08f},
+      glm::vec2{+0.00375f, +0.00f},
+      glm::vec2{+0.00375f, +0.08f},
+
+//       // Cannon body
+//       glm::vec2{-10.5f, -04.0f},
+//       glm::vec2{-10.5f, +04.0f},
+//       glm::vec2{+10.5f, -04.0f},
+//       glm::vec2{+10.5f, +04.0f},
+
+//       // Cannon barrel
+//       glm::vec2{-02.5f, +02.5f},
+//       glm::vec2{-02.5f, +09.5f},
+//       glm::vec2{+02.5f, +02.5f},
+//       glm::vec2{+02.5f, +09.5f},
       };
 
-  // Normalize
-  for (auto &position : positions) {
-    position /= glm::vec2{15.5f, 15.5f};
-  }
+//   // Normalize
+//   for (auto &position : positions) {
+//     position /= glm::vec2{15.5f, 15.5f};
+//   }
 
+//   const std::array indices{0, 1, 2,
+//                            1, 2, 3,
+//                            // barrel
+//                            4, 5, 6,
+//                            5, 6, 7};
   const std::array indices{0, 1, 2,
                            1, 2, 3,
-                           // barrel
+
                            4, 5, 6,
-                           5, 6, 7};
+                           5, 6, 7,
+                           
+                           8, 9, 10,
+                           9, 10, 11,
+                           
+                           12, 13, 14,
+                           13, 14, 15};
   // clang-format on
 
   // Generate VBO
