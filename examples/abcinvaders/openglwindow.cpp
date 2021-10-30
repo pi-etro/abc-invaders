@@ -66,6 +66,7 @@ void OpenGLWindow::restart() {
   m_cannon.initializeGL(m_objectsProgram);
   m_bullets.initializeGL(m_objectsProgram);
   m_aliens.initializeGL(m_objectsProgram);
+  m_rays.initializeGL(m_objectsProgram);
 }
 
 void OpenGLWindow::update() {
@@ -81,6 +82,7 @@ void OpenGLWindow::update() {
   m_cannon.update(m_gameData, deltaTime);
   m_bullets.update(m_cannon, m_gameData, deltaTime);
   m_aliens.update(deltaTime);
+  m_rays.update(m_aliens, deltaTime);
 
   if (m_gameData.m_state == State::Playing) {
     checkCollisions();
@@ -97,6 +99,7 @@ void OpenGLWindow::paintGL() {
   m_cannon.paintGL(m_gameData);
   m_bullets.paintGL();
   m_aliens.paintGL();
+  m_rays.paintGL();
 }
 
 void OpenGLWindow::paintUI() {
@@ -138,6 +141,7 @@ void OpenGLWindow::terminateGL() {
   m_cannon.terminateGL();
   m_bullets.terminateGL();
   m_aliens.terminateGL();
+  m_rays.terminateGL();
 }
 
 void OpenGLWindow::checkCollisions() {
@@ -148,6 +152,18 @@ void OpenGLWindow::checkCollisions() {
         glm::distance(m_cannon.m_translation, alienTranslation)};
 
     if (distance < 0.1125f/2 + 0.0825f/2 || alien.m_translation.y < -1.0f) { // TODO ajustar hitboxes
+      m_gameData.m_state = State::GameOver;
+      m_restartWaitTimer.restart();
+    }
+  }
+
+  // Check collision between cannon and rays
+  for (auto &ray : m_rays.m_rays) {
+    auto rayTranslation{ray.m_translation};
+    auto distance{glm::distance(m_cannon.m_translation, rayTranslation)};
+
+    if (distance < 0.0225f/2 + 0.1125f/2 || ray.m_translation.y < -1.1f) { // TODO ajustar hitboxes
+      ray.m_dead = true;
       m_gameData.m_state = State::GameOver;
       m_restartWaitTimer.restart();
     }
@@ -165,7 +181,7 @@ void OpenGLWindow::checkCollisions() {
           const auto distance{
               glm::distance(bullet.m_translation, alienTranslation)};
 
-          if (distance < 0.00375f/2 + 0.0825f/2) { // TODO ajustar hitboxes
+          if (distance < 0.0075f/2 + 0.0825f/2) { // TODO ajustar hitboxes
             alien.m_hit = true;
             bullet.m_dead = true;
           }
@@ -176,6 +192,27 @@ void OpenGLWindow::checkCollisions() {
     // Kill aliens marked as hit
     m_aliens.m_aliens.remove_if(
         [](const Aliens::Alien &a) { return a.m_hit; });
+  }
+
+  // Check collision between bullets and rays
+  for (auto &bullet : m_bullets.m_bullets) {
+    if (bullet.m_dead) continue;
+
+    for (auto &ray : m_rays.m_rays) {
+      for (const auto i : {-2, 0, 2}) {
+        for (const auto j : {-2, 0, 2}) {
+          const auto rayTranslation{ray.m_translation +
+                                         glm::vec2(i, j)};
+          const auto distance{
+              glm::distance(bullet.m_translation, rayTranslation)};
+
+          if (distance < 0.0075f/2 + 0.0225f/2) { // TODO ajustar hitboxes
+            ray.m_dead = true;
+            bullet.m_dead = true;
+          }
+        }
+      }
+    }
   }
 }
 

@@ -8,6 +8,7 @@
 #include "gamedata.hpp"
 
 class OpenGLWindow;
+class Rays;
 
 class Aliens {
  public:
@@ -19,6 +20,7 @@ class Aliens {
 
  private:
   friend OpenGLWindow;
+  friend Rays;
 
   GLuint m_program{};
   GLint m_translationLoc{};
@@ -53,6 +55,8 @@ class Aliens {
   bool m_jump = false;
 
   static bool compareX(const Aliens::Alien &left, const Aliens::Alien &right);
+
+  abcg::ElapsedTimer m_rayCoolDownTimer;
 
 };
 

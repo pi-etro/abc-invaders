@@ -9,6 +9,7 @@
 #include "cannon.hpp"
 #include "bullets.hpp"
 #include "aliens.hpp"
+#include "rays.hpp"
 
 class OpenGLWindow : public abcg::OpenGLWindow {
  protected:
@@ -30,6 +31,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   Cannon m_cannon;
   Bullets m_bullets;
   Aliens m_aliens;
+  Rays m_rays;
 
   abcg::ElapsedTimer m_restartWaitTimer;
 

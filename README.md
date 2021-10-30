@@ -1,10 +1,10 @@
 # ABC Invaders
 
 
-|            Name                   |    RA    |
-|:---------------------------------:|:--------:|
-| Pietro Di Consolo Gregorio        | 11038416 |
-| Beatriz Libanio de Araujo Yordaky | 11013714 |
+|            Name            |    RA    |
+|:--------------------------:|:--------:|
+| Pietro Di Consolo Gregorio | 11038416 |
+|                            |          |
 
 ## Table of Contents
 
