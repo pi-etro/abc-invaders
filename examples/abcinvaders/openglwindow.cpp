@@ -5,7 +5,7 @@
 #include "abcg.hpp"
 
 void OpenGLWindow::handleEvent(SDL_Event &event) {
-  // Keyboard events
+  // keyboard events
   if (event.type == SDL_KEYDOWN) {
     if (event.key.keysym.sym == SDLK_SPACE)
       m_gameData.m_input.set(static_cast<size_t>(Input::Fire));
@@ -23,7 +23,7 @@ void OpenGLWindow::handleEvent(SDL_Event &event) {
       m_gameData.m_input.reset(static_cast<size_t>(Input::Right));
   }
 
-  // Mouse events
+  // mouse events
   if (event.type == SDL_MOUSEBUTTONDOWN) {
     if (event.button.button == SDL_BUTTON_LEFT)
       m_gameData.m_input.set(static_cast<size_t>(Input::Fire));
@@ -35,7 +35,7 @@ void OpenGLWindow::handleEvent(SDL_Event &event) {
 }
 
 void OpenGLWindow::initializeGL() {
-  // Load a new font
+  // load new font
   ImGuiIO &io{ImGui::GetIO()};
   const auto filename{getAssetsPath() + "Retro-Gaming.ttf"};
   m_font = io.Fonts->AddFontFromFileTTF(filename.c_str(), 60.0f);
@@ -43,7 +43,7 @@ void OpenGLWindow::initializeGL() {
     throw abcg::Exception{abcg::Exception::Runtime("Cannot load font file")};
   }
 
-  // Create program to render the objects
+  // create program to render the objects
   m_objectsProgram = createProgramFromFile(getAssetsPath() + "objects.vert",
                                            getAssetsPath() + "objects.frag");
 
@@ -52,10 +52,6 @@ void OpenGLWindow::initializeGL() {
 #if !defined(__EMSCRIPTEN__)
   abcg::glEnable(GL_PROGRAM_POINT_SIZE);
 #endif
-
-  // Start pseudo-random number generator
-  m_randomEngine.seed(
-      std::chrono::steady_clock::now().time_since_epoch().count());
 
   restart();
 }
@@ -72,7 +68,7 @@ void OpenGLWindow::restart() {
 void OpenGLWindow::update() {
   const float deltaTime{static_cast<float>(getDeltaTime())};
 
-  // Wait 5 seconds before restarting
+  // wait 5 seconds before restarting
   if (m_gameData.m_state != State::Playing &&
       m_restartWaitTimer.elapsed() > 5) {
     restart();
@@ -145,43 +141,42 @@ void OpenGLWindow::terminateGL() {
 }
 
 void OpenGLWindow::checkCollisions() {
-  // Check collision between cannon and aliens
+  // check collision between cannon and aliens
   for (const auto &alien : m_aliens.m_aliens) {
     const auto alienTranslation{alien.m_translation};
     const auto distance{
         glm::distance(m_cannon.m_translation, alienTranslation)};
 
-    if (distance < 0.1125f/2 + 0.0825f/2 || alien.m_translation.y < -1.0f) { // TODO ajustar hitboxes
+    if (distance < 0.1125f / 2 + 0.0825f / 2 || alien.m_translation.y < -1.0f) {
       m_gameData.m_state = State::GameOver;
       m_restartWaitTimer.restart();
     }
   }
 
-  // Check collision between cannon and rays
+  // check collision between cannon and rays
   for (auto &ray : m_rays.m_rays) {
     auto rayTranslation{ray.m_translation};
     auto distance{glm::distance(m_cannon.m_translation, rayTranslation)};
 
-    if (distance < 0.0225f/2 + 0.1125f/2 || ray.m_translation.y < -1.1f) { // TODO ajustar hitboxes
+    if (distance < 0.0225f / 2 + 0.1125f / 2 || ray.m_translation.y < -1.1f) {
       ray.m_dead = true;
       m_gameData.m_state = State::GameOver;
       m_restartWaitTimer.restart();
     }
   }
 
-  // Check collision between bullets and aliens
+  // check collision between bullets and aliens
   for (auto &bullet : m_bullets.m_bullets) {
     if (bullet.m_dead) continue;
 
     for (auto &alien : m_aliens.m_aliens) {
       for (const auto i : {-2, 0, 2}) {
         for (const auto j : {-2, 0, 2}) {
-          const auto alienTranslation{alien.m_translation +
-                                         glm::vec2(i, j)};
+          const auto alienTranslation{alien.m_translation + glm::vec2(i, j)};
           const auto distance{
               glm::distance(bullet.m_translation, alienTranslation)};
 
-          if (distance < 0.0075f/2 + 0.0825f/2) { // TODO ajustar hitboxes
+          if (distance < 0.0075f / 2 + 0.0825f / 2) {
             alien.m_hit = true;
             bullet.m_dead = true;
           }
@@ -189,24 +184,22 @@ void OpenGLWindow::checkCollisions() {
       }
     }
 
-    // Kill aliens marked as hit
-    m_aliens.m_aliens.remove_if(
-        [](const Aliens::Alien &a) { return a.m_hit; });
+    // kill aliens marked as hit
+    m_aliens.m_aliens.remove_if([](const Aliens::Alien &a) { return a.m_hit; });
   }
 
-  // Check collision between bullets and rays
+  // check collision between bullets and rays
   for (auto &bullet : m_bullets.m_bullets) {
     if (bullet.m_dead) continue;
 
     for (auto &ray : m_rays.m_rays) {
       for (const auto i : {-2, 0, 2}) {
         for (const auto j : {-2, 0, 2}) {
-          const auto rayTranslation{ray.m_translation +
-                                         glm::vec2(i, j)};
+          const auto rayTranslation{ray.m_translation + glm::vec2(i, j)};
           const auto distance{
               glm::distance(bullet.m_translation, rayTranslation)};
 
-          if (distance < 0.0075f/2 + 0.0225f/2) { // TODO ajustar hitboxes
+          if (distance < 0.0075f / 2 + 0.0225f / 2) {
             ray.m_dead = true;
             bullet.m_dead = true;
           }

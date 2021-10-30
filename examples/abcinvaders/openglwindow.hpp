@@ -6,9 +6,9 @@
 #include <random>
 
 #include "abcg.hpp"
-#include "cannon.hpp"
-#include "bullets.hpp"
 #include "aliens.hpp"
+#include "bullets.hpp"
+#include "cannon.hpp"
 #include "rays.hpp"
 
 class OpenGLWindow : public abcg::OpenGLWindow {
@@ -33,11 +33,9 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   Aliens m_aliens;
   Rays m_rays;
 
-  abcg::ElapsedTimer m_restartWaitTimer;
+  abcg::ElapsedTimer m_restartWaitTimer;  // TODO remove
 
   ImFont* m_font{};
-
-  std::default_random_engine m_randomEngine;
 
   void checkCollisions();
   void checkWinCondition();

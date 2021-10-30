@@ -15,7 +15,7 @@ void Bullets::initializeGL(GLuint program) {
   m_bullets.clear();
 
   // clang-format off
-  std::array<glm::vec2, 24> positions{
+  std::array<glm::vec2, 4> positions{
       glm::vec2{-0.00375f, -0.00f},
       glm::vec2{-0.00375f, +0.06f},
       glm::vec2{+0.00375f, -0.00f},
@@ -26,27 +26,28 @@ void Bullets::initializeGL(GLuint program) {
                            1, 2, 3};
   // clang-format on
 
-  // Generate VBO
+  // generate VBO
   abcg::glGenBuffers(1, &m_vbo);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
   abcg::glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions.data(),
                      GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // Generate EBO
+  // generate EBO
   abcg::glGenBuffers(1, &m_ebo);
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
   abcg::glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(),
                      GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  // Get location of attributes in the program
-  const GLint positionAttribute{abcg::glGetAttribLocation(m_program, "inPosition")};
+  // get location of attributes in the program
+  const GLint positionAttribute{
+      abcg::glGetAttribLocation(m_program, "inPosition")};
 
-  // Create VAO
+  // create VAO
   abcg::glGenVertexArrays(1, &m_vao);
 
-  // Bind vertex attributes to current VAO
+  // bind vertex attributes to current VAO
   abcg::glBindVertexArray(m_vao);
 
   abcg::glEnableVertexAttribArray(positionAttribute);
@@ -57,7 +58,7 @@ void Bullets::initializeGL(GLuint program) {
 
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 
-  // End of binding to current VAO
+  // end of binding to current VAO
   abcg::glBindVertexArray(0);
 }
 
@@ -74,7 +75,7 @@ void Bullets::paintGL() {
     abcg::glUniform2f(m_translationLoc, bullet.m_translation.x,
                       bullet.m_translation.y);
 
-    abcg::glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT, nullptr);
+    abcg::glDrawElements(GL_TRIANGLES, 2 * 3, GL_UNSIGNED_INT, nullptr);
   }
 
   abcg::glBindVertexArray(0);
@@ -88,11 +89,12 @@ void Bullets::terminateGL() {
   abcg::glDeleteVertexArrays(1, &m_vao);
 }
 
-void Bullets::update(Cannon &cannon, const GameData &gameData, float deltaTime) {
-  // Create a pair of bullets
+void Bullets::update(Cannon &cannon, const GameData &gameData,
+                     float deltaTime) {
+  // create bullet
   if (gameData.m_input[static_cast<size_t>(Input::Fire)] &&
       gameData.m_state == State::Playing) {
-    // At least 250 ms must have passed since the last bullets
+    // at least 500 ms must have passed since the last bullet
     if (cannon.m_bulletCoolDownTimer.elapsed() > 500.0 / 1000.0) {
       cannon.m_bulletCoolDownTimer.restart();
 
@@ -107,14 +109,12 @@ void Bullets::update(Cannon &cannon, const GameData &gameData, float deltaTime) 
 
   for (auto &bullet : m_bullets) {
     bullet.m_translation += bullet.m_velocity * deltaTime;
-    
-    // Kill bullet if it goes off screen
-    if (bullet.m_translation.x < -1.1f) bullet.m_dead = true; // TODO remove
-    if (bullet.m_translation.x > +1.1f) bullet.m_dead = true; // TODO remove
+
+    // kill bullet if it goes off screen
     if (bullet.m_translation.y < -1.1f) bullet.m_dead = true;
     if (bullet.m_translation.y > +1.1f) bullet.m_dead = true;
   }
 
-  // Remove dead bullets
+  // remove dead bullets
   m_bullets.remove_if([](const Bullet &p) { return p.m_dead; });
 }

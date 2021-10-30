@@ -1,5 +1,9 @@
 # ABC Invaders
 
+<div align="center">
+    Play online at <a href="https://pi-etro.github.io/abc-invaders">https://pi-etro.github.io/abc-invaders</a>
+</div>
+<br>
 
 |            Name                   |    RA    |
 |:---------------------------------:|:--------:|

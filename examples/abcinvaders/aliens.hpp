@@ -52,12 +52,10 @@ class Aliens {
 
   float m_direction = 1.0;
   float m_last_direction = 1.0;
-  bool m_jump = false;
 
   static bool compareX(const Aliens::Alien &left, const Aliens::Alien &right);
 
   abcg::ElapsedTimer m_rayCoolDownTimer;
-
 };
 
 #endif

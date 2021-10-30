@@ -5,8 +5,8 @@
 #include <random>
 
 #include "abcg.hpp"
-#include "gamedata.hpp"
 #include "aliens.hpp"
+#include "gamedata.hpp"
 
 class OpenGLWindow;
 
@@ -33,7 +33,7 @@ class Rays {
 
   struct Ray {
     bool m_dead{};
-    glm::vec2 m_translation{glm::vec2(0)};
+    glm::vec2 m_translation{};
     glm::vec2 m_velocity{glm::vec2(0)};
   };
 

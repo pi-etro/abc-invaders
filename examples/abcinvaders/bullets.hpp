@@ -4,8 +4,8 @@
 #include <list>
 
 #include "abcg.hpp"
-#include "gamedata.hpp"
 #include "cannon.hpp"
+#include "gamedata.hpp"
 
 class OpenGLWindow;
 

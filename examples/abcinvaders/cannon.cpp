@@ -18,7 +18,7 @@ void Cannon::initializeGL(GLuint program) {
   m_velocity = glm::vec2(0.5f, 0.0f);
 
   // clang-format off
-  std::array<glm::vec2, 24> positions{
+  std::array<glm::vec2, 16> positions{
       glm::vec2{-0.05625f, +0.00f},
       glm::vec2{-0.05625f, +0.04f},
       glm::vec2{+0.05625f, +0.00f},
@@ -53,27 +53,27 @@ void Cannon::initializeGL(GLuint program) {
                            13, 14, 15};
   // clang-format on
 
-  // Generate VBO
+  // generate VBO
   abcg::glGenBuffers(1, &m_vbo);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
   abcg::glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions.data(),
                      GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // Generate EBO
+  // generate EBO
   abcg::glGenBuffers(1, &m_ebo);
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
   abcg::glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(),
                      GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  // Get location of attributes in the program
+  // get location of attributes in the program
   GLint positionAttribute{abcg::glGetAttribLocation(m_program, "inPosition")};
 
-  // Create VAO
+  // create VAO
   abcg::glGenVertexArrays(1, &m_vao);
 
-  // Bind vertex attributes to current VAO
+  // bind vertex attributes to current VAO
   abcg::glBindVertexArray(m_vao);
 
   abcg::glEnableVertexAttribArray(positionAttribute);
@@ -84,7 +84,7 @@ void Cannon::initializeGL(GLuint program) {
 
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 
-  // End of binding to current VAO
+  // end of binding to current VAO
   abcg::glBindVertexArray(0);
 }
 
@@ -100,7 +100,7 @@ void Cannon::paintGL(const GameData &gameData) {
   abcg::glUniform2fv(m_translationLoc, 1, &m_translation.x);
 
   abcg::glUniform4fv(m_colorLoc, 1, &m_color.r);
-  abcg::glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT, nullptr);
+  abcg::glDrawElements(GL_TRIANGLES, 8 * 3, GL_UNSIGNED_INT, nullptr);
 
   abcg::glBindVertexArray(0);
 
@@ -114,9 +114,11 @@ void Cannon::terminateGL() {
 }
 
 void Cannon::update(const GameData &gameData, float deltaTime) {
-  // Move
-  if (gameData.m_input[static_cast<size_t>(Input::Left)] && m_translation.x > -0.85)
+  // move cannon on left/right
+  if (gameData.m_input[static_cast<size_t>(Input::Left)] &&
+      m_translation.x > -0.85)
     m_translation -= m_velocity * deltaTime;
-  if (gameData.m_input[static_cast<size_t>(Input::Right)] && m_translation.x < 0.85)
+  if (gameData.m_input[static_cast<size_t>(Input::Right)] &&
+      m_translation.x < 0.85)
     m_translation += m_velocity * deltaTime;
 }

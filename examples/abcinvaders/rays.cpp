@@ -6,6 +6,10 @@
 void Rays::initializeGL(GLuint program) {
   terminateGL();
 
+  // start pseudo-random number generator
+  m_randomEngine.seed(
+      std::chrono::steady_clock::now().time_since_epoch().count());
+
   m_program = program;
   m_colorLoc = abcg::glGetUniformLocation(m_program, "color");
   m_rotationLoc = abcg::glGetUniformLocation(m_program, "rotation");
@@ -75,27 +79,28 @@ void Rays::initializeGL(GLuint program) {
                            };
   // clang-format on
 
-  // Generate VBO
+  // generate VBO
   abcg::glGenBuffers(1, &m_vbo);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
   abcg::glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions.data(),
                      GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // Generate EBO
+  // generate EBO
   abcg::glGenBuffers(1, &m_ebo);
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
   abcg::glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(),
                      GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  // Get location of attributes in the program
-  const GLint positionAttribute{abcg::glGetAttribLocation(m_program, "inPosition")};
+  // get location of attributes in the program
+  const GLint positionAttribute{
+      abcg::glGetAttribLocation(m_program, "inPosition")};
 
-  // Create VAO
+  // create VAO
   abcg::glGenVertexArrays(1, &m_vao);
 
-  // Bind vertex attributes to current VAO
+  // bind vertex attributes to current VAO
   abcg::glBindVertexArray(m_vao);
 
   abcg::glEnableVertexAttribArray(positionAttribute);
@@ -106,7 +111,7 @@ void Rays::initializeGL(GLuint program) {
 
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 
-  // End of binding to current VAO
+  // end of binding to current VAO
   abcg::glBindVertexArray(0);
 }
 
@@ -138,9 +143,9 @@ void Rays::terminateGL() {
 }
 
 void Rays::update(Aliens &aliens, float deltaTime) {
-  // Create ray
-  if (m_rays.size() < 3 ){
-    // At least 250 ms must have passed since the last bullets
+  // maximum of 3 rays
+  if (m_rays.size() < 3) {
+    // at least 300 ms must have passed since the last ray
     if (aliens.m_rayCoolDownTimer.elapsed() > 300.0 / 1000.0) {
       aliens.m_rayCoolDownTimer.restart();
 
@@ -148,37 +153,33 @@ void Rays::update(Aliens &aliens, float deltaTime) {
 
       auto rayTranslation = getRandomAlienTranslation(aliens);
 
-      if (rayTranslation.x != 0 && rayTranslation.y != 0) {
-        Ray ray{.m_dead = false,
-                        .m_translation = rayTranslation,
-                        .m_velocity = raySpeed};
-        m_rays.push_back(ray);
-      }
+      Ray ray{.m_dead = false,
+              .m_translation = rayTranslation,
+              .m_velocity = raySpeed};
+      m_rays.push_back(ray);
     }
   }
 
   for (auto &ray : m_rays) {
     ray.m_translation += ray.m_velocity * deltaTime;
-    
-    // Kill bullet if it goes off screen
-    if (ray.m_translation.x < -1.1f) ray.m_dead = true; // TODO remove
-    if (ray.m_translation.x > +1.1f) ray.m_dead = true; // TODO remove
+
+    // kill ray if it goes off screen
     if (ray.m_translation.y < -1.1f) ray.m_dead = true;
     if (ray.m_translation.y > +1.1f) ray.m_dead = true;
   }
 
-  // Remove dead bullets
+  // remove dead rays
   m_rays.remove_if([](const Ray &p) { return p.m_dead; });
 }
 
-glm::vec2 Rays::getRandomAlienTranslation(Aliens &aliens){
-    if (!aliens.m_aliens.empty()) {
-        auto iterator = aliens.m_aliens.begin();
-        std::uniform_int_distribution<int> randomIndex{0, (int) aliens.m_aliens.size()};
-        const auto random(randomIndex(m_randomEngine));
-        // int random = rand() % aliens.m_aliens.size();
-        std::advance(iterator, random);
-        return iterator->m_translation;
-    }
-    return glm::vec2{0};
+glm::vec2 Rays::getRandomAlienTranslation(Aliens &aliens) {
+  if (!aliens.m_aliens.empty()) {
+    auto iterator = aliens.m_aliens.begin();
+    std::uniform_int_distribution<int> randomIndex{0,
+                                                   (int)aliens.m_aliens.size()};
+    const auto random(randomIndex(m_randomEngine));
+    std::advance(iterator, random);
+    return iterator->m_hit ? glm::vec2{-2, -2} : iterator->m_translation;
+  }
+  return glm::vec2{-2, -2};
 }
