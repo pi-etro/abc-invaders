@@ -27,12 +27,19 @@ The game begins on `Playing` stage, with the cannon free to move (`A`/`D` or `â†
 
 The game components are: cannon (player), cannon bullets, aliens and aliens bullets (rays). Each component is composed by triangles forming small rectangles that shapes the final image (see the example bellow). All components have their logic, such as velocities, colors and behaviour, implemented in the respective header and class files.
 
-
+<br>
 <p align="center">
-  <img width="350" src="https://raw.githubusercontent.com/pi-etro/abc-invaders/main/img/component_example.svg">
+  <img width="250" src="https://raw.githubusercontent.com/pi-etro/abc-invaders/main/img/component_example.svg">
 </p>
+<p align="center">Figura 1. Example of component drawn with triangles.</p>
+<br>
 
-The openglwindow component is responsible to centralize the game control, calling all components subroutines, the game state checkup routine and the colision routine.
+The openglwindow component is responsible to centralize the game control, calling all components subroutines, the game state checkup routine and the colision routine. The colisions tracked in the game are:
+
+- `cannon` _vs_ `rays`
+- `cannon` _vs_ `aliens`
+- `bullets` _vs_ `aliens`
+- `bullets` _vs_ `rays`
 
 ## Usage
 
