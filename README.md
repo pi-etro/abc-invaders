@@ -19,7 +19,7 @@
 
 ## About
 
-ABC Invaders is a 2D game developed with the [ABCg](https://github.com/hbatagelo/abcg) framework, developed for the Computer Graphics course at UFABC.
+ABC Invaders is a 2D game developed with the [ABCg](https://github.com/hbatagelo/abcg) framework for the Computer Graphics course at UFABC.
 
 The game is inspired by [Space Invaders](https://en.wikipedia.org/wiki/Space_Invaders), originally developed in 1978, and was implemented with C++ programming language and OpenGL. The player controls a laser cannon able to move horizontally on the screen, with the objective to shoot all the aliens, that can also shoot the player (and then the game is over). The aliens move both horizontally and vertically, constantly approching the laser cannon.
 
@@ -35,7 +35,7 @@ The game components are: cannon (player), cannon bullets, aliens and aliens bull
 <p align="center">
   <img width="250" src="https://raw.githubusercontent.com/pi-etro/abc-invaders/main/img/component_example.svg">
 </p>
-<p align="center">Figura 1. Example of component drawn with triangles.</p>
+<p align="center">Figure 1. Example of component drawn with triangles.</p>
 <br>
 
 The openglwindow component is responsible to centralize the game control, calling all components subroutines, the game state checkup routine and the colision routine. The colisions tracked in the game are:
